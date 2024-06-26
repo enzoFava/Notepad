@@ -26,7 +26,7 @@ db.connect(function (err) {
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
-    origin: "https://notepad-client.vercel.app/", // Allow requests from React app
+    origin: "https://notepad-client.vercel.app", // Allow requests from React app
     credentials: true
   }));
 
