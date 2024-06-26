@@ -29,6 +29,7 @@ app.use(cors({
     origin: "https://notepad-client.vercel.app", // Allow requests from React app
     credentials: true
   }));
+app.options('*', cors());
 
 // API FETCH notes FROM db
 app.get("/", async (req, res) => {
