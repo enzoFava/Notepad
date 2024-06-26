@@ -35,12 +35,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Handle preflight requests
 
-// Debugging middleware to check CORS headers
-app.use((req, res, next) => {
-  console.log('CORS headers:', res.getHeaders());
-  next();
-});
-
 // API FETCH notes FROM db
 app.get("/", async (req, res) => {
   try {
@@ -53,7 +47,7 @@ app.get("/", async (req, res) => {
     }
   } catch (error) {
     console.error("Error fetching data", error);
-    res.status(500).send("Error fetching data");
+    res.status(500).send(`Error fetching data: ${error.message}`);
   }
 });
 
