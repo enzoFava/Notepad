@@ -25,11 +25,21 @@ db.connect(function (err) {
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(cors({
-    origin: "https://notepad-client.vercel.app", // Allow requests from React app
-    credentials: true
-  }));
-app.options('*', cors());
+
+const corsOptions = {
+  origin: "https://notepad-client.vercel.app",
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight requests
+
+// Debugging middleware to check CORS headers
+app.use((req, res, next) => {
+  console.log('CORS headers:', res.getHeaders());
+  next();
+});
 
 // API FETCH notes FROM db
 app.get("/", async (req, res) => {
