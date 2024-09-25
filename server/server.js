@@ -51,8 +51,10 @@ app.get("/", async (req, res) => {
 app.post("/add", async (req, res) => {
     const { note } = req.body
     try {
+      if (note.title != "" && note.content != ""){
         const result = await db.query("INSERT INTO notes (title, content) VALUES ($1, $2) RETURNING *", [note.title, note.content]);
         res.status(200).json(result.rows[0]);
+      }
     } catch (error) {
         console.error("Error adding note ", error);
         res.status(500).send("Error adding note");
