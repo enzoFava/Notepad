@@ -8,28 +8,39 @@ const app = express();
 const db = new pg.Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    require: true,
     rejectUnauthorized: false,
   },
 });
 
-db.connect(function (err) {
-  err
-    ? console.log("Error connecting database: " + err)
-    : console.log("Database connected!");
+db.connect(err => {
+  if (err) {
+    console.log("Error connecting to the database: " + err);
+  } else {
+    console.log("Database connected!");
+  }
 });
 
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
 const corsOptions = {
-  origin: "https://notepad-client.vercel.app",
+  origin: [
+    "https://notepad-client.vercel.app",
+    "http://localhost:3000" // Add your local development origin
+  ],
   credentials: true,
   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Handle preflight requests
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+// const corsOptions = {
+//   origin: "https://notepad-client.vercel.app",
+//   credentials: true,
+//   optionsSuccessStatus: 200,
+// };
+
+// app.use(cors(corsOptions));
+// app.options('*', cors(corsOptions)); // Handle preflight requests
 
 // API FETCH notes FROM db
 app.get("/", async (req, res) => {

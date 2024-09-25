@@ -1,32 +1,16 @@
 import dotenv from 'dotenv';
-
 dotenv.config();
 
 export default {
-  development: {
-    client: 'pg',
-    connection: {
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }
-    },
-    migrations: {
-      directory: './migrations'
-    },
-    seeds: {
-      directory: './seeds'
-    }
+  client: 'pg',
+  connection: {
+    connectionString: process.env.DATABASE_URL, 
+    ssl: { rejectUnauthorized: false }, // Ensures SSL works correctly
   },
-  production: {
-    client: 'pg',
-    connection: {
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }
-    },
-    migrations: {
-      directory: './migrations'
-    },
-    seeds: {
-      directory: './seeds'
-    }
-  }
+  migrations: {
+    directory: './migrations', // Ensure this points to the correct directory
+  },
+  seeds: {
+    directory: './seeds', // Optional: if you have seed files
+  },
 };

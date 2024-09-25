@@ -7,33 +7,34 @@ import { getNotes, addNote, deleteNote } from "./api";
 
 function App() {
   const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
+      setLoading(true); // Set loading state to true at the start
       try {
         const response = await getNotes();
-        if (response.data.length > 0){
-          setNotes(response.data);
-        } else {
-          setNotes([]);
-        }
+        setNotes(response.data);
       } catch (error) {
+        setError("Error fetching notes. Please try again later.");
         console.error("Error del GET", error);
+      } finally {
+        setLoading(false); // Reset loading state
       }
     };
 
     getData();
   }, []);
 
-  async function handleAdd(note){
+  async function handleAdd(note) {
     try {
       const response = await addNote(note);
-      setNotes((prev) => [...prev, response.data])
+      setNotes((prev) => [...prev, response.data]);
     } catch (error) {
       console.error("Error adding new note ", error);
     }
   }
- 
 
   async function handleDelete(id) {
     try {
@@ -47,18 +48,24 @@ function App() {
   return (
     <div>
       <Header />
-      <CreateArea onAdd={handleAdd}/>
-      {notes.map((note) => {
-        return (
-          <Note
-            key={note.id}
-            id={note.id}
-            title={note.title}
-            content={note.content}
-            onDelete={handleDelete}
-          />
-        );
-      })}
+      <CreateArea onAdd={handleAdd} />
+      {loading && <p>Loading notes...</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {notes.length > 0 ? (
+        notes.map((note) => {
+          return (
+            <Note
+              key={note.id}
+              id={note.id}
+              title={note.title}
+              content={note.content}
+              onDelete={handleDelete}
+            />
+          );
+        })
+      ) : (
+        <p>No notes available.</p>
+      )}
       <Footer />
     </div>
   );
