@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://notepad-app-server.vercel.app/", // "https://resume-creator-server.vercel.app/" || 
+  baseURL: "https://notepad-app-server.vercel.app/", // 'http://localhost:5000/' || 
 });
 
 export const getNotes = () => api.get("/");

@@ -17,7 +17,6 @@ import {
   function ConfirmBox({ open, closeDialog, title , deleteFunction }) {
     return (
       <Dialog
-        fullWidth
         open={open}
         maxWidth="md"
         scroll="body"
@@ -25,11 +24,11 @@ import {
         onBackdropClick={closeDialog}
         TransitionComponent={Transition}
       >
-        <DialogContent sx={{ px: 8, py: 6, position: "relative" }}>
+        <DialogContent sx={{ position: "relative" }}>
           <IconButton
             size="medium"
             onClick={closeDialog}
-            sx={{ position: "absolute", right: "1rem", top: "1rem" }}
+            sx={{ position: "absolute", right: "1rem", top: "1rem", '&:hover': {background:"#fff", color:"black"} }}
           >
             X
           </IconButton>
@@ -44,9 +43,9 @@ import {
                   flexDirection: "column",
                 }}
               >
-                <Typography variant="h5">Delete {title}</Typography>
+                <Typography sx={{fontFamily: "'Montserrat', sans-serif",}} variant="h5">Delete {title}</Typography>
   
-                <Typography variant="body1">
+                <Typography sx={{fontFamily: "'Montserrat', sans-serif",}} variant="body1">
                   Are you sure you want to delete this {title} ?
                 </Typography>
               </Box>
@@ -56,10 +55,10 @@ import {
               xs={12}
               sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
             >
-              <Button onClick={closeDialog} size="medium" variant="contained" color="primary">
+              <Button sx={{fontFamily: "'Montserrat', sans-serif",}} onClick={closeDialog} size="medium" variant="contained" color="primary">
                 Cancel
               </Button>
-              <Button onClick={deleteFunction} size="medium" variant="contained" color="error">
+              <Button sx={{fontFamily: "'Montserrat', sans-serif",}} onClick={deleteFunction} size="medium" variant="contained" color="error">
                 Delete
               </Button>{" "}
             </Grid>
