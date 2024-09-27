@@ -7,3 +7,5 @@ const api = axios.create({
 export const getNotes = () => api.get("/");
 export const addNote = (note) => api.post("/add", { note });
 export const deleteNote = (id) => api.post("/delete", { id });
+export const login = (userData) => api.post("/login", userData);
+export const register = (userData) => api.post("/register", userData);

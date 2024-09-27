@@ -19,12 +19,12 @@ function Note(props) {
       <Zoom in={true}>
         <Card
           sx={{
-            margin: "16px",
-            width: "240px",
-            float: "left",
+            margin: "16px", // Add equal margin on all sides
+            width: { xs: "calc(100% - 32px)", sm: "240px" }, // Adjust width to match the create area on small screens
             padding: "10px",
             boxShadow: "0 2px 5px #ccc",
             borderRadius: "7px",
+            backgroundColor: "#fff", // Ensure the background color is consistent
           }}
         >
           <CardContent>
@@ -61,10 +61,10 @@ function Note(props) {
               float: "right",
               marginRight: "10px",
               color: "#4caf50",
-              '&:hover': {
+              "&:hover": {
                 color: "#317434",
-                background: "#fff"
-              }
+                background: "#fff",
+              },
             }}
           >
             <DeleteIcon />
