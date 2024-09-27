@@ -24,7 +24,9 @@ const AuthDialog = ({ open, onClose, onAuthSuccess }) => {
     e.preventDefault();
     try {
       if (isLogin) {
-        await login(formData.email, formData.password);
+        const response = await login(formData);
+        localStorage.setItem('token', response.data.token);
+        console.log(response)  ////DEBUG TOKEN ADDED
       } else {
         await register(formData);
       }

@@ -48,14 +48,14 @@ app.use(express.json());
 app.post("/register", async (req, res) => {
   const {firstName, lastName, email, password} = req.body;
   try {
-    const result = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+    const result = await db.query('SELECT * FROM users WHERE "email" = $1', [email]);
     if (result.rows.length > 0) {
       return res.status(400).json({ message: "Email already registered."});
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    await db.query("INSERT INTO users (email, firstName, lastName, password) VALUES ($1, $2, $3, $4)", [email, firstName, lastName, passwordHash]);
+    await db.query('INSERT INTO users ("email", "firstName", "lastName", "password") VALUES ($1, $2, $3, $4)', [email, firstName, lastName, passwordHash]);
     
     const token = jwt.sign({email}, "jwt-secret", {expiresIn: "1h"});
 
@@ -63,7 +63,7 @@ app.post("/register", async (req, res) => {
     // Here i should login and authenticate the new user
     
   } catch (error) {
-    console.error("Error fetching data", error);
+    console.error("Error fetching data ////register////", error);
     res.status(500).json({message: `Error: ${error.message}`});
   }
 });
@@ -72,7 +72,7 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    const result = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+    const result = await db.query('SELECT * FROM users WHERE "email" = $1', [email]);
     if (result.rows.length === 0) {
       res.status(404).json({message: "User not found"});
     }
@@ -128,7 +128,6 @@ app.post("/delete", async (req, res) => {
   const { id } = req.body;
   try {
     const result = await db.query("DELETE FROM notes WHERE id = $1 RETURNING *", [id]);
-    console.log(result.rows[0]);
     res.status(200).json(result.rows[0]);
   } catch (error){
     console.error("Error deleting note ", error);
