@@ -1,120 +1,192 @@
+/* Global Styles */
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "Montserrat", sans-serif;
-  }
-  html {
-    font-family: "Montserrat", sans-serif;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-  body {
-    background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='20' height='20' patternTransform='scale(1) rotate(50)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(0,0%,100%,1)'/><path d='M10 15a5 5 0 110-10 5 5 0 010 10z'  stroke-width='0.5' stroke='hsla(130, 26%, 90%, 1)' fill='none'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
-    padding: 0%;
-    
-  }
-  
-  header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: #b9eeba;
-    padding: 1%;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
-    opacity: 0.8;
-  }
-  
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Montserrat", sans-serif;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='20' height='20' patternTransform='scale(1) rotate(50)'><rect x='0' y='0' width='100%' height='100%' fill='hsla(0,0%,100%,1)'/><path d='M10 15a5 5 0 110-10 5 5 0 010 10z'  stroke-width='0.5' stroke='hsla(130, 26%, 90%, 1)' fill='none'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
+  font-family: "Montserrat", sans-serif;
+}
+
+/* Header Styles */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #b9eeba;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  opacity: 0.8;
+  transition: padding 0.3s ease;
+}
+
+header h1 {
+  color: #153316;
+  font-family: "McLaren", cursive;
+  font-weight: 200;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Footer Styles */
+footer {
+  text-align: center;
+  width: 100%;
+  height: 2.5rem;
+  margin-top: auto;
+  position: relative;
+}
+
+footer p {
+  color: #ccc;
+}
+
+/* Note Styles */
+.note.MuiCard-root {
+  background: #fff;
+  border-radius: 7px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  width: 90%;
+  max-width: 240px;
+  margin: 16px auto;
+}
+
+/* Form Styles */
+form.create-note {
+  margin: 30px auto 20px;
+  width: 90%;
+  max-width: 480px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 7px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+form.create-note input,
+form.create-note textarea {
+  width: 100%;
+  border: none;
+  padding: 4px;
+  outline: none;
+  font-size: 1.2em;
+}
+
+form.create-note button {
+  position: absolute;
+  right: 18px;
+  bottom: -18px;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  outline: none;
+}
+
+form.create-note button:hover {
+  background: #317434;
+}
+
+/* Dialog Styles */
+.MuiDialog-paper {
+  width: 90%;
+  max-width: 600px;
+}
+
+.MuiDialog-title {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.MuiDialogContent-root {
+  padding: 16px;
+}
+
+h5 {
+  margin-bottom: 8px;
+}
+
+/* Button Styles */
+button {
+  font-family: "Montserrat", sans-serif;
+  padding: 10px;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
   header h1 {
-    color: #153316;
-    font-family: "McLaren", cursive;
-    font-weight: 200;
+    font-size: 1.5rem;
   }
-  
+
   footer {
-    position: absolute;
-    text-align: center;
-    bottom: 0;
-    width: 100%;
-    height: 2.5rem;
+    padding: 0.5rem;
   }
-  
-  footer p {
-    color: #ccc;
-  }
+
   .note.MuiCard-root {
-    background: #fff;
-    border-radius: 7px;
-    box-shadow: 0 2px 5px #ccc;
-    padding: 10px;
-    width: 240px;
+    width: calc(100% - 32px);
+    max-width: none;
     margin: 16px;
-    float: left;
   }
-  .note.MuiCard-root h1 {
-    font-size: 1.1em;
-    margin-bottom: 6px;
-  }
-  .note.MuiCard-root p {
-    font-size: 1.1em;
-    margin-bottom: 10px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-  
-  .note.MuiCard-root button {
-    position: relative;
-    float: right;
-    margin-right: 10px;
-    background: #fff;
-    color: #4caf50;
-    border: none;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    outline: none;
-  }
-  
-  .note.MuiCard-root button:hover {
-    color: #317434;
-  }
-  
+
   form.create-note {
-    position: relative;
-    margin-top: 7% !important;
-    width: 480px;
-    margin: 30px auto 20px auto;
-    background: #fff;
-    padding: 15px;
-    border-radius: 7px;
-    box-shadow: 0 1px 5px rgb(138, 137, 137);
+    padding: 8px;
   }
-  form.create-note input,
-  form.create-note textarea {
-    width: 100%;
-    border: none;
-    padding: 4px;
-    outline: none;
-    font-size: 1.2em;
-    font-family: inherit;
-    resize: none;
+
+  .MuiDialog-title {
+    font-size: 1.3em;
   }
-  form.create-note button {
-    position: absolute;
-    right: 18px;
-    bottom: -18px;
-    background: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    outline: none;
+
+  .MuiDialog-paper {
+    width: 95%;
   }
-  
-  form.create-note button:hover {
-    background: #317434;
+}
+
+/* Create Area Styles */
+.create-area {
+  width: 100%;
+  margin: calc(90px + 2rem) 0 1rem;
+}
+
+.fab-container {
+  position: absolute;
+  right: 1px;
+  bottom: -1px;
+  transform: translateY(50%);
+}
+
+.create-note {
+  position: relative;
+  padding-bottom: 50px;
+}
+
+/* Container that holds all the notes */
+.note-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* For tablets and desktops, arrange notes horizontally */
+@media (min-width: 768px) {
+  .note-container {
+    flex-direction: row;
   }
+}

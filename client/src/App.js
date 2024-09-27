@@ -4,23 +4,22 @@ import Footer from "./components/Footer";
 import Note from "./components/Note";
 import CreateArea from "./components/CreateArea";
 import AuthDialog from "./components/AuthDialog";
-import { getNotes, addNote, deleteNote, login, register } from "./api";
+import { getNotes, addNote, deleteNote } from "./api"; // Removed unused imports
 
 function App() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAuthDialog, setShowAuthDialog] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Manage authentication state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem('token'); // Assuming you store the JWT token in local storage
+      const token = localStorage.getItem("token");
       if (token) {
-        setIsLoggedIn(true); // User is logged in
-        console.log(notes);
+        setIsLoggedIn(true);
       } else {
-        setShowAuthDialog(true); // Show auth dialog if no token
+        setShowAuthDialog(true);
       }
     };
 
@@ -29,27 +28,26 @@ function App() {
 
   useEffect(() => {
     const fetchNotes = async () => {
-      setLoading(true); // Set loading state to true at the start
+      setLoading(true);
       try {
         if (isLoggedIn) {
-          const response = await getNotes(); // Fetch notes from the API
+          const response = await getNotes();
           setNotes(response.data);
         }
       } catch (error) {
         setError("Error fetching notes. Please try again later.");
         console.error("Error fetching notes:", error);
       } finally {
-        setLoading(false); // Reset loading state
+        setLoading(false);
       }
     };
 
     if (isLoggedIn) {
       fetchNotes();
     }
-
   }, [isLoggedIn]);
-    
-  function logOut(){
+
+  function logOut() {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setShowAuthDialog(true);
@@ -66,7 +64,7 @@ function App() {
         setNotes((prev) => [...prev, tempNote]);
       }
     } catch (error) {
-      console.error("Error adding new note ", error);
+      console.error("Error adding new note", error);
     }
   };
 
@@ -75,48 +73,53 @@ function App() {
       if (isLoggedIn) {
         await deleteNote(id);
       }
-      setNotes((prev) => prev.filter(note => note.id !== id));
+      setNotes((prev) => prev.filter((note) => note.id !== id));
     } catch (error) {
-      console.error("Error deleting note ", error);
+      console.error("Error deleting note", error);
     }
   };
 
   const handleAuthSuccess = () => {
     setIsLoggedIn(true);
-    setShowAuthDialog(false); // Close dialog on successful auth
+    setShowAuthDialog(false);
   };
 
   return (
-    <div>
-      <Header isLoggedIn={isLoggedIn} logOut={logOut}/>
-      <CreateArea onAdd={handleAdd} />
-      {loading && <p>Loading notes...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {notes.length > 0 ? (
-        notes.map((note) => {
-          return (
+    <div className="main-content">
+      <Header isLoggedIn={isLoggedIn} logOut={logOut} />
+      <div className="create-area">
+        <CreateArea onAdd={handleAdd} />
+      </div>
+      {loading && <p className="loading">Loading notes...</p>}
+      {error && (
+        <p className="error" style={{ color: "red" }}>
+          {error}
+        </p>
+      )}
+      <div className="note-container">
+        {notes.length > 0 ? (
+          notes.map((note) => (
             <Note
               key={note.id}
               id={note.id}
               title={note.title}
               content={note.content}
               onDelete={handleDelete}
+              className="note"
             />
-          );
-        })
-      ) : (
-        <p>No notes available.</p>
-      )}
+          ))
+        ) : (
+          <p>No notes available.</p>
+        )}
+      </div>
       <Footer />
-
-      {/* Auth Dialog */}
-      {!isLoggedIn && 
-      <AuthDialog
-        open={showAuthDialog}
-        onClose={() => setShowAuthDialog(false)}
-        onAuthSuccess={handleAuthSuccess}
-      />
-      }
+      {!isLoggedIn && (
+        <AuthDialog
+          open={showAuthDialog}
+          onClose={() => setShowAuthDialog(false)}
+          onAuthSuccess={handleAuthSuccess}
+        />
+      )}
     </div>
   );
 }
