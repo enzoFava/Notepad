@@ -26,6 +26,7 @@ header {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   opacity: 0.8;
   transition: padding 0.3s ease;
+  z-index: 1000;
 }
 
 header h1 {
@@ -59,6 +60,7 @@ footer p {
   width: 90%;
   max-width: 240px;
   margin: 16px auto;
+  z-index: 1;
 }
 
 /* Form Styles */
@@ -73,6 +75,7 @@ form.create-note {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  z-index: 1;
 }
 
 form.create-note input,
@@ -82,6 +85,7 @@ form.create-note textarea {
   padding: 4px;
   outline: none;
   font-size: 1.2em;
+  z-index: 1;
 }
 
 form.create-note button {
@@ -97,10 +101,12 @@ form.create-note button {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   outline: none;
+  z-index: 1;
 }
 
 form.create-note button:hover {
   background: #317434;
+  z-index: 1;
 }
 
 /* Dialog Styles */
@@ -128,10 +134,18 @@ button {
   padding: 10px;
 }
 
+.MuiDialogActions-root{
+  justify-content: space-evenly !important;
+}
+
 /* Media Queries for Responsiveness */
 @media (max-width: 600px) {
+  header .MuiContainer-root {
+    justify-content: space-between;
+  }
   header h1 {
     font-size: 1.5rem;
+    margin-bottom: 5%;
   }
 
   footer {
@@ -155,12 +169,19 @@ button {
   .MuiDialog-paper {
     width: 95%;
   }
+
+  .MuiDialogActions-root{
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center;
+    gap: 25px; /* Space between buttons */
+  }
 }
 
 /* Create Area Styles */
 .create-area {
   width: 100%;
-  margin: calc(90px + 2rem) 0 1rem;
+  margin: calc(120px + 2rem) 0 1rem;
 }
 
 .fab-container {
@@ -188,5 +209,11 @@ button {
 @media (min-width: 768px) {
   .note-container {
     flex-direction: row;
+  }
+}
+
+@media (min-width: 1200px) {
+  .MuiContainer-root {
+    max-width: none !important;
   }
 }

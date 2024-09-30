@@ -24,7 +24,6 @@ function Header({ isLoggedIn, logOut }) {
           <DescriptionIcon sx={{ marginRight: "8px" }} />
           Notepad
         </h1>
-        {isLoggedIn && (
           <Button
             onClick={logOut}
             sx={{
@@ -40,9 +39,8 @@ function Header({ isLoggedIn, logOut }) {
               fontSize: isMobile ? "0.9rem" : "1rem", // Responsive font size
             }}
           >
-            Log out
+            {isLoggedIn ? "Log out" : "Log In | Register"}
           </Button>
-        )}
       </Container>
     </header>
   );
