@@ -12,6 +12,7 @@ function App() {
   const [error, setError] = useState(null);
   const [showAuthDialog, setShowAuthDialog] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     const checkAuth = () => {
@@ -54,6 +55,11 @@ function App() {
     setNotes([]);
   }
 
+  function getUser(currentUser) {
+    setUser(currentUser);
+    console.log(currentUser)
+  }
+
   const handleAdd = async (note) => {
     try {
       if (isLoggedIn) {
@@ -86,7 +92,7 @@ function App() {
 
   return (
     <div className="main-content">
-      <Header isLoggedIn={isLoggedIn} logOut={logOut} />
+      <Header isLoggedIn={isLoggedIn} logOut={logOut} user={user}/>
       <div className="create-area">
         <CreateArea onAdd={handleAdd} />
       </div>
@@ -118,6 +124,7 @@ function App() {
           open={showAuthDialog}
           onClose={() => setShowAuthDialog(false)}
           onAuthSuccess={handleAuthSuccess}
+          getUser={getUser}
         />
       )}
     </div>

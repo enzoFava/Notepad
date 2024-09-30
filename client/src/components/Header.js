@@ -2,9 +2,10 @@ import React from "react";
 import DescriptionIcon from "@mui/icons-material/Description";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 import { useMediaQuery } from "@mui/material";
 
-function Header({ isLoggedIn, logOut }) {
+function Header({ isLoggedIn, logOut, user }) {
   const isMobile = useMediaQuery("(max-width:600px)");
 
   return (
@@ -24,6 +25,14 @@ function Header({ isLoggedIn, logOut }) {
           <DescriptionIcon sx={{ marginRight: "8px" }} />
           Notepad
         </h1>
+        <div className="header">
+          {isLoggedIn && 
+            <Typography variant="body2"
+              sx={{ fontFamily: "'Montserrat', sans-serif", paddingRight: "20px"}}
+            >
+            Hello {user.firstName}
+            </Typography>
+          }
           <Button
             onClick={logOut}
             sx={{
@@ -41,6 +50,8 @@ function Header({ isLoggedIn, logOut }) {
           >
             {isLoggedIn ? "Log out" : "Log In | Register"}
           </Button>
+        </div>
+        
       </Container>
     </header>
   );

@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { login, register } from "../api"; // Adjust the import based on your API file structure
 
-const AuthDialog = ({ open, onClose, onAuthSuccess }) => {
+const AuthDialog = ({ open, onClose, onAuthSuccess, getUser }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
@@ -31,9 +31,10 @@ const AuthDialog = ({ open, onClose, onAuthSuccess }) => {
       if (isLogin) {
         const response = await login(formData);
         localStorage.setItem("token", response.data.token);
-        console.log(response); // DEBUG TOKEN ADDED
+        getUser(response.data.user)
       } else {
-        await register(formData);
+        const response = await register(formData);
+        getUser(response.data.user)
       }
       onAuthSuccess(); // Callback to inform parent component
       onClose(); // Close the dialog
