@@ -4,7 +4,8 @@ import Footer from "./components/Footer";
 import Note from "./components/Note";
 import CreateArea from "./components/CreateArea";
 import AuthDialog from "./components/AuthDialog";
-import { getNotes, addNote, deleteNote } from "./api"; // Removed unused imports
+import { getNotes, addNote, deleteNote, getUser } from "./api";
+import {jwtDecode} from "jwt-decode";
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -13,6 +14,7 @@ function App() {
   const [showAuthDialog, setShowAuthDialog] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
+
 
   useEffect(() => {
     const checkAuth = () => {
@@ -24,8 +26,19 @@ function App() {
       }
     };
 
+    const fetchUser = async () => {
+      try {
+        if (isLoggedIn) {
+          const result = await getUser();
+          setUser(result.data);
+        }
+      } catch (error) {
+        console.log("Error in fetchUser", error);
+      }
+    }
     checkAuth();
-  }, []);
+    fetchUser();
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -53,11 +66,7 @@ function App() {
     setIsLoggedIn(false);
     setShowAuthDialog(true);
     setNotes([]);
-  }
-
-  function getUser(currentUser) {
-    setUser(currentUser);
-    console.log(currentUser)
+    setUser({});
   }
 
   const handleAdd = async (note) => {
@@ -92,15 +101,19 @@ function App() {
 
   return (
     <div className="main-content">
-      <Header isLoggedIn={isLoggedIn} logOut={logOut} user={user}/>
+      <Header isLoggedIn={isLoggedIn} logOut={logOut} user={user} />
       <div className="create-area">
         <CreateArea onAdd={handleAdd} />
       </div>
-      {loading && <p className="loading">Loading notes...</p>}
-      {error && (
-        <p className="error" style={{ color: "red" }}>
-          {error}
-        </p>
+      {isLoggedIn && (
+        <>
+          {loading && <p className="loading">Loading notes...</p>}
+          {error && (
+            <p className="error" style={{ color: "red" }}>
+              {error}
+            </p>
+          )}
+        </>
       )}
       <div className="note-container">
         {notes.length > 0 ? (

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://notepad-app-server.vercel.app/", //  || 'http://localhost:5000/'
+  baseURL: 'http://localhost:5000/', //  || "https://notepad-app-server.vercel.app/"
 });
 
 api.interceptors.request.use((config) => {

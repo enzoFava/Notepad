@@ -73,8 +73,8 @@ app.post("/register", async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    result = await db.query('INSERT INTO users ("email", "firstName", "lastName", "password") VALUES ($1, $2, $3, $4)', [email.toLowerCase(), firstName, lastName, passwordHash]);
-    const user = result.rows[0]
+    const response = await db.query('INSERT INTO users ("email", "firstName", "lastName", "password") VALUES ($1, $2, $3, $4) RETURNING *', [email.toLowerCase(), firstName, lastName, passwordHash]);
+    const user = response.rows[0]
     const token = jwt.sign({ id: user.id, email: user.email}, "jwt-secret", {expiresIn: "1h"});
 
     res.status(201).json({message: "user registered", token, user});
@@ -128,11 +128,19 @@ app.get("/", authenticateToken ,async (req, res) => {
 });
 
 // API GETUSER
-// app.get('/user', authenticateToken, async(req, res) => {
-//   console.log(req.user.id)
-//   const response = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id])
-//   console.log(response);
-// })
+app.get('/user', authenticateToken, async(req, res) => {
+  try {
+    if (req.user) {
+      const result = await db.query("SELECT * FROM users WHERE id = $1", [req.user.id]);
+      const user = result.rows[0]
+      return res.status(200).json(user);
+    }
+    return res.status(404).json({message:"Not logged in"});
+  } catch (error) {
+    console.error("Error fetching user", error);
+    res.status(500).send("Error fetching user");
+  }
+});
 
 // API INSERT notes INTO db
 app.post("/add", authenticateToken, async (req, res) => {

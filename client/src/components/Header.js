@@ -30,7 +30,7 @@ function Header({ isLoggedIn, logOut, user }) {
             <Typography variant="body2"
               sx={{ fontFamily: "'Montserrat', sans-serif", paddingRight: "20px"}}
             >
-            Hello {user.firstName}
+            Hello {user && user.firstName}
             </Typography>
           }
           <Button
