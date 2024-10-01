@@ -49,9 +49,10 @@ function CreateArea(props) {
     try {
       // Add note
       props.onAdd(note);
+      toast.success("Note added successfully!");
       // Reset fields
       setNote({ title: "", content: "" });
-      toast.success("Note added successfully!");
+      
     } catch (error) {
       console.error("Error adding note: ", error);
       toast.error("An error occurred while adding the note.");

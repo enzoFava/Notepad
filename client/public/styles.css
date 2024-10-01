@@ -182,12 +182,16 @@ button {
     align-items: center;
     gap: 25px; /* Space between buttons */
   }
+  .custom-h1.MuiTypography-root {
+    font-size: 2.4rem;
+    margin-top: 35%;
+  }
 }
 
 /* Create Area Styles */
 .create-area {
   width: 100%;
-  margin: calc(120px + 2rem) 0 1rem;
+  margin-bottom: 1rem;
 }
 
 .fab-container {
@@ -216,10 +220,12 @@ button {
   .note-container {
     flex-direction: row;
   }
+
 }
 
 @media (min-width: 1200px) {
   .MuiContainer-root {
     max-width: none !important;
   }
+
 }

@@ -4,9 +4,8 @@ import Footer from "./components/Footer";
 import Note from "./components/Note";
 import CreateArea from "./components/CreateArea";
 import AuthDialog from "./components/AuthDialog";
-import { getNotes, addNote, deleteNote, getUser } from "./api";
-import {jwtDecode} from "jwt-decode";
-
+import { Typography } from "@mui/material";
+import { getNotes, addNote, deleteNote, getUser, editNote } from "./api";
 function App() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +45,8 @@ function App() {
       try {
         if (isLoggedIn) {
           const response = await getNotes();
-          setNotes(response.data);
+          const sortedNotes = response.data.sort((a, b) => a.id - b.id);
+          setNotes(sortedNotes);
         }
       } catch (error) {
         setError("Error fetching notes. Please try again later.");
@@ -83,6 +83,19 @@ function App() {
     }
   };
 
+  const handleEditNote = async (updateNote) => {
+    try {
+      if (isLoggedIn){
+        const response = await editNote(updateNote);
+        setNotes((prev) => prev.map((note) => note.id === response.data.id ? response.data : note));
+      } else {
+        setNotes((prev) => prev.map((note) => note.id === updateNote.id ? ({title: updateNote.newTitle, content: updateNote.newContent, id: Date.now().toString()}) : note));
+      }
+    } catch (error) {
+      console.error("Error updating note", error)
+    }
+  }
+
   const handleDelete = async (id) => {
     try {
       if (isLoggedIn) {
@@ -102,7 +115,22 @@ function App() {
   return (
     <div className="main-content">
       <Header isLoggedIn={isLoggedIn} logOut={logOut} user={user} />
+      <Typography
+        className="custom-h1"
+              sx={{
+                fontSize: "3em",
+                marginBottom: "0",
+                fontFamily: "'Montserrat', sans-serif",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "100px"
+              }}
+            >
+              Write your notes!
+            </Typography>
       <div className="create-area">
+      
         <CreateArea onAdd={handleAdd} />
       </div>
       {isLoggedIn && (
@@ -124,6 +152,7 @@ function App() {
               title={note.title}
               content={note.content}
               onDelete={handleDelete}
+              onEdit={handleEditNote}
               className="note"
             />
           ))
