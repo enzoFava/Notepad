@@ -86,11 +86,11 @@ app.post("/register", async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.status(201).json({ message: "user registered", token, user });
+    return res.status(201).json({ message: "user registered", token, user });
     // Here i should login and authenticate the new user
   } catch (error) {
     console.error("Error fetching data ////register////", error);
-    res.status(500).json({ message: `Error: ${error.message}` });
+    return res.status(500).json({ message: `Error: ${error.message}` });
   }
 });
 
@@ -102,7 +102,7 @@ app.post("/login", async (req, res) => {
       email.toLowerCase(),
     ]);
     if (result.rows.length === 0) {
-      res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const user = result.rows[0];
@@ -114,10 +114,10 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user.id, email: user.email }, "jwt-secret", {
       expiresIn: "1h",
     });
-    res.json({ message: "Login successful", token, user: user });
+    return res.json({ message: "Login successful", token, user: user });
   } catch (error) {
     console.error("Error fetching data", error);
-    res.status(500).json({ message: `Error: ${error.message}` });
+    return res.status(500).json({ message: `Error: ${error.message}` });
   }
 });
 
@@ -129,13 +129,13 @@ app.get("/", authenticateToken, async (req, res) => {
     ]);
     if (result.rows.length > 0) {
       const notes = result.rows;
-      res.json(notes);
+      return res.json(notes);
     } else {
-      res.status(404).send("No data found");
+      return res.status(404).send("No data found");
     }
   } catch (error) {
     console.error("Error fetching data", error);
-    res.status(500).send(`Error fetching data: ${error.message}`);
+    return res.status(500).send(`Error fetching data: ${error.message}`);
   }
 });
 
@@ -152,7 +152,7 @@ app.get("/user", authenticateToken, async (req, res) => {
     return res.status(404).json({ message: "Not logged in" });
   } catch (error) {
     console.error("Error fetching user", error);
-    res.status(500).send("Error fetching user");
+    return res.status(500).send("Error fetching user");
   }
 });
 
@@ -165,11 +165,11 @@ app.post("/add", authenticateToken, async (req, res) => {
         "INSERT INTO notes (title, content, user_id) VALUES ($1, $2, $3) RETURNING *",
         [note.title, note.content, req.user.id]
       );
-      res.status(200).json(result.rows[0]);
+      return res.status(200).json(result.rows[0]);
     }
   } catch (error) {
     console.error("Error adding note ", error);
-    res.status(500).send("Error adding note");
+    return res.status(500).send("Error adding note");
   }
 });
 
@@ -182,11 +182,11 @@ app.post("/edit", authenticateToken, async (req, res) => {
         "UPDATE notes SET title = $1, content = $2 WHERE id = $3 AND user_id = $4 RETURNING *",
         [updateNote.newTitle, updateNote.newContent, updateNote.id, req.user.id]
       );
-      res.status(200).json(result.rows[0]);
+      return res.status(200).json(result.rows[0]);
     }
   } catch (error) {
     console.error("Error updating note", error);
-    res.status(500).send("Error updating note");
+    return res.status(500).send("Error updating note");
   }
 });
 
@@ -198,10 +198,10 @@ app.post("/delete", authenticateToken, async (req, res) => {
       "DELETE FROM notes WHERE id = $1 AND user_id = $2 RETURNING *",
       [id, req.user.id]
     );
-    res.status(200).json(result.rows[0]);
+    return res.status(200).json(result.rows[0]);
   } catch (error) {
     console.error("Error deleting note ", error);
-    res.status(500).send("Error deleting note");
+    return res.status(500).send("Error deleting note");
   }
 });
 

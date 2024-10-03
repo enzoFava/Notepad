@@ -5,7 +5,9 @@ import Note from "./components/Note";
 import CreateArea from "./components/CreateArea";
 import AuthDialog from "./components/AuthDialog";
 import { Typography } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
 import { getNotes, addNote, deleteNote, getUser, editNote } from "./api";
+
 function App() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,6 +16,22 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
 
+  useEffect(() => {
+    const checkTokenExp = () => {
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        const decoded = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decoded.exp < currentTime) {
+          localStorage.removeItem("token");
+          console.log("token expired, user logged out");
+        }
+      }
+    };
+    checkTokenExp();
+  });
 
   useEffect(() => {
     const checkAuth = () => {
@@ -34,7 +52,7 @@ function App() {
       } catch (error) {
         console.log("Error in fetchUser", error);
       }
-    }
+    };
     checkAuth();
     fetchUser();
   }, [isLoggedIn]);
@@ -85,16 +103,30 @@ function App() {
 
   const handleEditNote = async (updateNote) => {
     try {
-      if (isLoggedIn){
+      if (isLoggedIn) {
         const response = await editNote(updateNote);
-        setNotes((prev) => prev.map((note) => note.id === response.data.id ? response.data : note));
+        setNotes((prev) =>
+          prev.map((note) =>
+            note.id === response.data.id ? response.data : note
+          )
+        );
       } else {
-        setNotes((prev) => prev.map((note) => note.id === updateNote.id ? ({title: updateNote.newTitle, content: updateNote.newContent, id: Date.now().toString()}) : note));
+        setNotes((prev) =>
+          prev.map((note) =>
+            note.id === updateNote.id
+              ? {
+                  title: updateNote.newTitle,
+                  content: updateNote.newContent,
+                  id: Date.now().toString(),
+                }
+              : note
+          )
+        );
       }
     } catch (error) {
-      console.error("Error updating note", error)
+      console.error("Error updating note", error);
     }
-  }
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -117,20 +149,19 @@ function App() {
       <Header isLoggedIn={isLoggedIn} logOut={logOut} user={user} />
       <Typography
         className="custom-h1"
-              sx={{
-                fontSize: "3em",
-                marginBottom: "0",
-                fontFamily: "'Montserrat', sans-serif",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "100px"
-              }}
-            >
-              Write your notes!
-            </Typography>
+        sx={{
+          fontSize: "3em",
+          marginBottom: "0",
+          fontFamily: "'Montserrat', sans-serif",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "100px",
+        }}
+      >
+        Write your notes!
+      </Typography>
       <div className="create-area">
-      
         <CreateArea onAdd={handleAdd} />
       </div>
       {isLoggedIn && (
