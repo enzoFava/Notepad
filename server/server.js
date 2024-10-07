@@ -127,7 +127,7 @@ app.get("/", authenticateToken, async (req, res) => {
     const result = await db.query("SELECT * FROM notes WHERE user_id = $1", [
       req.user.id,
     ]);
-    if (result.rows.length > 0) {
+    if (result.rows.length >= 0) {
       const notes = result.rows;
       return res.json(notes);
     } else {

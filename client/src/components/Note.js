@@ -73,9 +73,9 @@ function Note(props) {
               position: "relative",
               float: "right",
               marginRight: "10px",
-              color: "#4caf50",
+              color: "#d32f2f",
               "&:hover": {
-                color: "#317434",
+                color: "#832222",
                 background: "#fff",
               },
               

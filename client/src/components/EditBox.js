@@ -2,6 +2,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogTitle,
   Fade,
   Grid,
   IconButton,
@@ -49,19 +50,17 @@ function EditBox({ open, closeDialog, title, editFunction, content, id }) {
   function handleSave() {
     if (updateNote.newTitle.trim() === "") {
       setError((prevError) => ({ ...prevError, title: true }));
-      toast.error("Title is required.");
       return;
     }
 
     if (updateNote.newContent.trim() === "") {
       setError((prevError) => ({ ...prevError, content: true }));
-      toast.error("Content is required.");
       return;
     }
 
     try {
       editFunction(updateNote);
-      toast.success("Note edited successfully!");
+      toast.success("Note updated!");
     } catch (error) {
       console.error("Error adding note: ", error);
       toast.error("An error occurred while editing the note.");
@@ -86,6 +85,7 @@ function EditBox({ open, closeDialog, title, editFunction, content, id }) {
       onClose={() => {
         closeDialog();
         cancelEdit();
+        toast.warn("Changes not saved");
       }}
       onBackdropClick={closeDialog}
       TransitionComponent={Transition}
@@ -96,6 +96,7 @@ function EditBox({ open, closeDialog, title, editFunction, content, id }) {
           onClick={() => {
             closeDialog();
             cancelEdit();
+            toast.warn("Changes not saved");
           }}
           sx={{
             padding: "0",
@@ -107,6 +108,18 @@ function EditBox({ open, closeDialog, title, editFunction, content, id }) {
         >
           X
         </IconButton>
+        <DialogTitle
+          sx={{
+            fontFamily: "'Montserrat', sans-serif",
+            fontWeight: "bold",
+            fontSize: "1.5em",
+            position: "relative",
+            width: "80%",
+            paddingLeft: '0',
+          }}
+        >
+          Edit note
+        </DialogTitle>
 
         <Grid container spacing={2}>
           {" "}
@@ -161,6 +174,7 @@ function EditBox({ open, closeDialog, title, editFunction, content, id }) {
               onClick={() => {
                 closeDialog();
                 cancelEdit();
+                toast.warn("Changes not saved");
               }}
               size="medium"
               variant="contained"

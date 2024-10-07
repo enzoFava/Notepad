@@ -29,6 +29,7 @@ header {
   z-index: 1000;
 }
 
+
 header h1 {
   color: #153316;
   font-family: "McLaren", cursive;
@@ -146,6 +147,11 @@ button {
 
 /* Media Queries for Responsiveness */
 @media (max-width: 600px) {
+  .header {
+    max-height: 1vh;
+    margin-bottom: 2%;
+  }
+
   header .MuiContainer-root {
     justify-content: space-between;
   }

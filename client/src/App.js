@@ -7,6 +7,8 @@ import AuthDialog from "./components/AuthDialog";
 import { Typography } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { getNotes, addNote, deleteNote, getUser, editNote } from "./api";
+import { ToastContainer, Bounce, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -38,6 +40,7 @@ function App() {
       const token = localStorage.getItem("token");
       if (token) {
         setIsLoggedIn(true);
+        
       } else {
         setShowAuthDialog(true);
       }
@@ -48,6 +51,7 @@ function App() {
         if (isLoggedIn) {
           const result = await getUser();
           setUser(result.data);
+          toast.success(`Welcome ${result.data.firstName.toUpperCase()}!`);
         }
       } catch (error) {
         console.log("Error in fetchUser", error);
@@ -145,62 +149,77 @@ function App() {
   };
 
   return (
-    <div className="main-content">
-      <Header isLoggedIn={isLoggedIn} logOut={logOut} user={user} />
-      <Typography
-        className="custom-h1"
-        sx={{
-          fontSize: "3em",
-          marginBottom: "0",
-          fontFamily: "'Montserrat', sans-serif",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "100px",
-        }}
-      >
-        Write your notes!
-      </Typography>
-      <div className="create-area">
-        <CreateArea onAdd={handleAdd} />
-      </div>
-      {isLoggedIn && (
-        <>
-          {loading && <p className="loading">Loading notes...</p>}
-          {error && (
-            <p className="error" style={{ color: "red" }}>
-              {error}
-            </p>
+    <>
+      <div className="main-content">
+        <Header isLoggedIn={isLoggedIn} logOut={logOut} user={user} />
+        <Typography
+          className="custom-h1"
+          sx={{
+            fontSize: "3em",
+            marginBottom: "0",
+            fontFamily: "'Montserrat', sans-serif",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "100px",
+          }}
+        >
+          Write your notes!
+        </Typography>
+        <div className="create-area">
+          <CreateArea onAdd={handleAdd} />
+        </div>
+        {isLoggedIn && (
+          <>
+            {loading && <p className="loading">Loading notes...</p>}
+            {error && (
+              <p className="error" style={{ color: "red" }}>
+                {error}
+              </p>
+            )}
+          </>
+        )}
+        <div className="note-container">
+          {notes.length > 0 ? (
+            notes.map((note) => (
+              <Note
+                key={note.id}
+                id={note.id}
+                title={note.title}
+                content={note.content}
+                onDelete={handleDelete}
+                onEdit={handleEditNote}
+                className="note"
+              />
+            ))
+          ) : (
+            <p>No notes available.</p>
           )}
-        </>
-      )}
-      <div className="note-container">
-        {notes.length > 0 ? (
-          notes.map((note) => (
-            <Note
-              key={note.id}
-              id={note.id}
-              title={note.title}
-              content={note.content}
-              onDelete={handleDelete}
-              onEdit={handleEditNote}
-              className="note"
-            />
-          ))
-        ) : (
-          <p>No notes available.</p>
+        </div>
+        <Footer />
+        {!isLoggedIn && (
+          <AuthDialog
+            open={showAuthDialog}
+            onClose={() => setShowAuthDialog(false)}
+            onAuthSuccess={handleAuthSuccess}
+            getUser={getUser}
+          />
         )}
       </div>
-      <Footer />
-      {!isLoggedIn && (
-        <AuthDialog
-          open={showAuthDialog}
-          onClose={() => setShowAuthDialog(false)}
-          onAuthSuccess={handleAuthSuccess}
-          getUser={getUser}
-        />
-      )}
-    </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Bounce}
+      />
+    </>
   );
 }
 

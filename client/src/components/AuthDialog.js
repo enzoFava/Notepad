@@ -7,9 +7,12 @@ import {
   Button,
   TextField,
   Typography,
+  IconButton,
   Zoom,
 } from "@mui/material";
 import { login, register } from "../api"; // Adjust the import based on your API file structure
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AuthDialog = ({ open, onClose, onAuthSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -38,144 +41,163 @@ const AuthDialog = ({ open, onClose, onAuthSuccess }) => {
       onAuthSuccess(); // Callback to inform parent component
       onClose(); // Close the dialog
     } catch (error) {
-      alert(
+      toast.error(
         error.response?.data?.message || "An error occurred. Please try again."
       );
     }
   };
 
   function handleClose(event, reason) {
-    if (reason !== "backdropClick") {
-      onClose();
-    }
+    onClose();
+    toast.warn("Notes will not persist on refresh")
   }
 
   return (
-    <Dialog
-      open={open}
-      maxWidth="sm"
-      scroll="body"
-      onClose={handleClose}
-      TransitionComponent={Zoom}
-      sx={{
-        "& .MuiDialog-paper": {
-          borderRadius: "10px",
-          padding: "16px",
-          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-          width: "90%" /* Make dialog width responsive */,
-          maxWidth: "500px" /* Limit maximum width */,
-        },
-      }}
-    >
-      <DialogTitle
+    <>
+      <Dialog
+        open={open}
+        maxWidth="sm"
+        scroll="body"
+        onClose={handleClose}
+        TransitionComponent={Zoom}
         sx={{
-          fontFamily: "'Montserrat', sans-serif",
-          fontWeight: "bold",
-          fontSize: "1.5em",
-          position: "relative",
+          "& .MuiDialog-paper": {
+            borderRadius: "10px",
+            padding: "16px",
+            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+            width: "90%" /* Make dialog width responsive */,
+            maxWidth: "500px" /* Limit maximum width */,
+          },
         }}
       >
-        {isLogin ? "Log In" : "Register"}
-      </DialogTitle>
-      <DialogContent sx={{ marginTop: 1 }}>
-        <form onSubmit={handleSubmit}>
-          {!isLogin && (
-            <>
-              <TextField
-                name="firstName"
-                label="First Name"
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                required
-                InputProps={{ sx: { fontFamily: "'Montserrat', sans-serif" } }} // Custom Input styles
-              />
-              <TextField
-                name="lastName"
-                label="Last Name"
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                required
-                InputProps={{ sx: { fontFamily: "'Montserrat', sans-serif" } }} // Custom Input styles
-              />
-            </>
-          )}
-          <TextField
-            name="email"
-            label="Email"
-            type="email"
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            required
-            InputProps={{ sx: { fontFamily: "'Montserrat', sans-serif" } }} // Custom Input styles
-          />
-          <TextField
-            name="password"
-            label="Password"
-            type="password"
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            required
-            InputProps={{ sx: { fontFamily: "'Montserrat', sans-serif" } }} // Custom Input styles
-          />
-          <Typography
-            variant="body2"
-            sx={{ fontFamily: "'Montserrat', sans-serif", marginTop: 2 }}
-          >
-            {isLogin ? "Don't have an account? " : "Already have an account?"}
-            <Button
-              onClick={() => setIsLogin(!isLogin)}
-              sx={{
-                textDecoration: "underline",
-                padding: 0,
-                color: "#3f51b5", // Change this to your desired color
-                "&:hover": {
-                  color: "#303f9f", // Hover color
-                },
-              }}
-            >
-              {isLogin ? "Register" : "Log In"}
-            </Button>
-          </Typography>
-        </form>
-      </DialogContent>
-      <DialogActions sx={{ justifyContent: "flex-end", padding: "16px" }}>
-        <Button
-          onClick={() => {
-            onClose();
-            alert("Notes will not persist the session.");
-          }}
+        <IconButton
+          size="medium"
+          onClick={handleClose}
           sx={{
-            fontFamily: "'Montserrat', sans-serif",
-            color: "#f44336", // Example color for "Stay Logged Out" button
-            "&:hover": {
-              color: "#c62828", // Hover color
-              background: "#fff",
-            },
+            position: "absolute",
+            right: "1rem",
+            top: "1rem",
+            "&:hover": { background: "#fff", color: "black" },
           }}
-          variant="outlined"
         >
-          Stay Logged Out
-        </Button>
-        <Button
-          type="submit"
-          onClick={handleSubmit}
+          X
+        </IconButton>
+        <DialogTitle
           sx={{
             fontFamily: "'Montserrat', sans-serif",
-            backgroundColor: "#4caf50", // Example color for submit button
-            "&:hover": {
-              backgroundColor: "#388e3c", // Hover color
-            },
+            fontWeight: "bold",
+            fontSize: "1.5em",
+            position: "relative",
+            width: "80%",
           }}
-          variant="contained"
         >
           {isLogin ? "Log In" : "Register"}
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </DialogTitle>
+        <DialogContent sx={{ marginTop: 1 }}>
+          <form onSubmit={handleSubmit}>
+            {!isLogin && (
+              <>
+                <TextField
+                  name="firstName"
+                  label="First Name"
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                  required
+                  InputProps={{
+                    sx: { fontFamily: "'Montserrat', sans-serif" },
+                  }} // Custom Input styles
+                />
+                <TextField
+                  name="lastName"
+                  label="Last Name"
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                  required
+                  InputProps={{
+                    sx: { fontFamily: "'Montserrat', sans-serif" },
+                  }} // Custom Input styles
+                />
+              </>
+            )}
+            <TextField
+              name="email"
+              label="Email"
+              type="email"
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              required
+              InputProps={{ sx: { fontFamily: "'Montserrat', sans-serif" } }} // Custom Input styles
+            />
+            <TextField
+              name="password"
+              label="Password"
+              type="password"
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              required
+              InputProps={{ sx: { fontFamily: "'Montserrat', sans-serif" } }} // Custom Input styles
+            />
+            <Typography
+              variant="body2"
+              sx={{ fontFamily: "'Montserrat', sans-serif", marginTop: 2 }}
+            >
+              {isLogin ? "Don't have an account? " : "Already have an account?"}
+              <Button
+                onClick={() => setIsLogin(!isLogin)}
+                sx={{
+                  textDecoration: "underline",
+                  padding: 0,
+                  color: "#3f51b5", // Change this to your desired color
+                  "&:hover": {
+                    color: "#303f9f", // Hover color
+                  },
+                }}
+              >
+                {isLogin ? "Register" : "Log In"}
+              </Button>
+            </Typography>
+          </form>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "flex-end", padding: "16px" }}>
+          <Button
+            onClick={() => {
+              onClose();
+              toast.warn("Notes will not persist on refresh")
+            }}
+            sx={{
+              fontFamily: "'Montserrat', sans-serif",
+              color: "#f44336", // Example color for "Stay Logged Out" button
+              "&:hover": {
+                color: "#c62828", // Hover color
+                background: "#fff",
+              },
+            }}
+            variant="outlined"
+          >
+            Stay Logged Out
+          </Button>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            sx={{
+              fontFamily: "'Montserrat', sans-serif",
+              backgroundColor: "#4caf50", // Example color for submit button
+              "&:hover": {
+                backgroundColor: "#388e3c", // Hover color
+              },
+            }}
+            variant="contained"
+          >
+            {isLogin ? "Log In" : "Register"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      
+    </>
   );
 };
 

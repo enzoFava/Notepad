@@ -32,13 +32,11 @@ function CreateArea(props) {
     // Validation
     if (note.title.trim() === "") {
       setError((prevError) => ({ ...prevError, title: true }));
-      toast.error("Title is required.");
       return;
     }
 
     if (note.content.trim() === "") {
       setError((prevError) => ({ ...prevError, content: true }));
-      toast.error("Content is required.");
       return;
     }
 
@@ -49,7 +47,7 @@ function CreateArea(props) {
     try {
       // Add note
       props.onAdd(note);
-      toast.success("Note added successfully!");
+      toast.success("Note added!");
       // Reset fields
       setNote({ title: "", content: "" });
       

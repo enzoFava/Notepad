@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { forwardRef } from "react";
+import {toast} from 'react-toastify';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />;
@@ -80,7 +81,11 @@ function ConfirmBox({ open, closeDialog, title, deleteFunction }) {
             </Button>
             <Button
               sx={{ fontFamily: "'Montserrat', sans-serif" }}
-              onClick={deleteFunction}
+              onClick={() => {
+                deleteFunction();
+                toast.error("Note deleted");
+                closeDialog();
+              }}
               size="medium"
               variant="contained"
               color="error"
