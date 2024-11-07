@@ -28,6 +28,7 @@ function App() {
 
         if (decoded.exp < currentTime) {
           localStorage.removeItem("token");
+          setShowAuthDialog(true);
           console.log("token expired, user logged out");
         }
       }

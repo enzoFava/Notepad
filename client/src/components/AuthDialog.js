@@ -8,14 +8,20 @@ import {
   TextField,
   Typography,
   IconButton,
+  CircularProgress,
+  InputAdornment,
   Zoom,
 } from "@mui/material";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { login, register } from "../api"; // Adjust the import based on your API file structure
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AuthDialog = ({ open, onClose, onAuthSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -32,24 +38,31 @@ const AuthDialog = ({ open, onClose, onAuthSuccess }) => {
     e.preventDefault();
     try {
       if (isLogin) {
+        setLoading(true);
         const response = await login(formData);
         localStorage.setItem("token", response.data.token);
+        setLoading(false);
       } else {
+        setLoading(true);
         const response = await register(formData);
         localStorage.setItem("token", response.data.token);
+        setLoading(false);
       }
       onAuthSuccess(); // Callback to inform parent component
       onClose(); // Close the dialog
     } catch (error) {
+      setLoading(true);
       toast.error(
         error.response?.data?.message || "An error occurred. Please try again."
       );
+      setLoading(false);
     }
   };
 
   function handleClose(event, reason) {
     onClose();
     toast.warn("Notes will not persist on refresh")
+    setLoading(false);
   }
 
   return (
@@ -134,12 +147,25 @@ const AuthDialog = ({ open, onClose, onAuthSuccess }) => {
             <TextField
               name="password"
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               onChange={handleChange}
               fullWidth
               margin="normal"
               required
-              InputProps={{ sx: { fontFamily: "'Montserrat', sans-serif" } }} // Custom Input styles
+              InputProps={{
+                sx: { fontFamily: "'Montserrat', sans-serif" },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                      onMouseDown={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }} // Custom Input styles
             />
             <Typography
               variant="body2"
@@ -192,7 +218,7 @@ const AuthDialog = ({ open, onClose, onAuthSuccess }) => {
             }}
             variant="contained"
           >
-            {isLogin ? "Log In" : "Register"}
+            {loading ? <CircularProgress size='25px' color="inherit"/> : !isLogin ? "Register" : "Log In"}
           </Button>
         </DialogActions>
       </Dialog>
